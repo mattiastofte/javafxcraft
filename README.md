@@ -38,4 +38,5 @@ To run this application requires the following:
 I've used these resources to plan and design my code:
 - [Meshing in a Minecraft Game](https://0fps.net/2012/06/30/meshing-in-a-minecraft-game/)
 
+<br>
 *Made with ♡ by Mattias Tofte.*
