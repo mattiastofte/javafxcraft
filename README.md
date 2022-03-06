@@ -4,8 +4,7 @@
 A simple clone of Minecraft made with JavaFX. This is not meant to be a direct clone of Mojang's work but rather a project to learn how 3D graphics work and more advanced OOP concepts. The main feature of this project will be a mesh-generator (this is where the logic lies) that generates a simple optimized voxel mesh that will be sent to the rendering pipeline. It will also involve a camera-object that can be controlled in 3D space.
 
 ### Classes!
-![Culling Example](https://0fps.files.wordpress.com/2012/06/culled8x8x8.png?w=300&h=288)
-![Class diagram](https://user-images.githubusercontent.com/37273026/156928108-b43dcdcb-e051-4357-b3f6-b13d2faf0500.png)
+![Class diagram](https://user-images.githubusercontent.com/37273026/156928176-44a8afdc-d418-46af-a082-7b34d2cb292e.png)
 
 ### File handling
 The game will involve a save-to-file feature where chunk- and block-data gets saved to XML file. Chunk's consist of matrices, so this is how the data will be read.
