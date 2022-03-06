@@ -19,7 +19,7 @@ Currently looking to implement these features:
 - [ ] [Block modification](https://github.com/mattiastofte/minecraft-clone/issues/4)
 
 #### Mesh generator
-It is not very efficient to generate a voxel grid mesh by iterating over each voxel and generating many 6-sided cubes per solid voxel. The time complexity of this method is linear in the number of voxels. One obvious improvement is to just cull out the interior faces, leaving only quads on the surface. 
+Iterating over each voxel and generating 6-sided cubes per solid voxel is not very time efficient. The time complexity of this method is linear in the number of voxels. The most obvious improvement is to cull out the interior faces, leaving only quads (faces) on the surface. 
 
 We can try to estimate how much smaller using a dimensional analysis argument:  assuming that our geometry is more-or-less spherical, let n be its radius.  Then, in the stupid method we would expect to generate about O(n^3) quads, while in the culled  version we’d get only O(n^2).  This gives an improvement of a factor of about O(n)
 
