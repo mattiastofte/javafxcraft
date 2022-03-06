@@ -21,6 +21,14 @@ Currently looking to implement these features:
 - [ ] [Data-structure](https://github.com/mattiastofte/minecraft-clone/issues/3)
 - [ ] [Block modification](https://github.com/mattiastofte/minecraft-clone/issues/4)
 
+### Mesh generator
+It is not very efficient to generate a voxel grid mesh by iterating over each voxel and generating many 6-sided cubes per solid voxel. The time complexity of this method is linear in the number of voxels. One obvious improvement is to just cull out the interior faces, leaving only quads on the surface. 
+
+We can try to estimate how much smaller using a dimensional analysis argument:  assuming that our geometry is more-or-less spherical, let n be its radius.  Then, in the stupid method we would expect to generate about O(n^3) quads, while in the culled  version we’d get only O(n^2).  This gives an improvement of a factor of about O(n)
+
+Rather, 
+<img src="https://user-images.githubusercontent.com/37273026/156931462-27901f1f-9a29-4eab-b7d3-2005bc5e34b2.png" width="220"> <img src="https://user-images.githubusercontent.com/37273026/156931472-5b4e451c-c5c9-4a29-b70a-1a12c7d6d312.png" width="207">
+
 ## Resources
 I've used these resources to plan and design my code:
 - [Meshing in a Minecraft Game](https://0fps.net/2012/06/30/meshing-in-a-minecraft-game/)
