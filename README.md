@@ -9,9 +9,9 @@ To run this application requires the following:
 
 ## Features
 Currently looking to implement these features:
-- [ ] #1
-- [ ] https://github.com/mattiastofte/minecraft-clone/issues/2
-- [ ] https://github.com/mattiastofte/minecraft-clone/issues/3
-- [ ] https://github.com/mattiastofte/minecraft-clone/issues/4
+- [ ] [Camera-controls](https://github.com/mattiastofte/minecraft-clone/issues/1)
+- [ ] [Voxel-mesh generator](https://github.com/mattiastofte/minecraft-clone/issues/2)
+- [ ] [Data-structure](https://github.com/mattiastofte/minecraft-clone/issues/3)
+- [ ] [Block modification](https://github.com/mattiastofte/minecraft-clone/issues/4)
 
-* *Made with ♡ by Mattias Tofte. * *
+*Made with ♡ by Mattias Tofte.*
