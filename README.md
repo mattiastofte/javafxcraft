@@ -1,6 +1,6 @@
 # minecraft-clone
 
-A simple clone of minecraft made with JavaFX. 
+A simple clone of Minecraft made with JavaFX. This is not meant to be a direct clone of Mojang's work but rather a project to learn how 3D graphics work and more advanced OOP concepts. 
 
 ## Prerequisists
 To run this application requires the following:
@@ -8,7 +8,8 @@ To run this application requires the following:
 - [JavaFX 18](https://gluonhq.com/products/javafx/)
 
 ## Features
-Currently i'm looking to implement these features:
-> Camera controls
-> sdasd
-- 
+Currently looking to implement these features:
+- [ ] https://github.com/mattiastofte/minecraft-clone/issues/1
+- [ ] https://github.com/mattiastofte/minecraft-clone/issues/2
+- [ ] https://github.com/mattiastofte/minecraft-clone/issues/3
+- [ ] https://github.com/mattiastofte/minecraft-clone/issues/4
