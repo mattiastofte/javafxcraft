@@ -9,7 +9,7 @@ To run this application requires the following:
 
 ## Features
 Currently looking to implement these features:
-- [ ] #739
+- [ ] #1
 - [ ] https://github.com/mattiastofte/minecraft-clone/issues/2
 - [ ] https://github.com/mattiastofte/minecraft-clone/issues/3
 - [ ] https://github.com/mattiastofte/minecraft-clone/issues/4
