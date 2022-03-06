@@ -14,4 +14,4 @@ Currently looking to implement these features:
 - [ ] https://github.com/mattiastofte/minecraft-clone/issues/3
 - [ ] https://github.com/mattiastofte/minecraft-clone/issues/4
 
-**Made with ♡ by Mattias Tofte.**
+* *Made with ♡ by Mattias Tofte.* *
