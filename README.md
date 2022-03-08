@@ -25,6 +25,12 @@ We can try to estimate how much smaller using a dimensional analysis argument:  
 
 <img src="https://user-images.githubusercontent.com/37273026/156931462-27901f1f-9a29-4eab-b7d3-2005bc5e34b2.png" width="220"> <img src="https://user-images.githubusercontent.com/37273026/156931472-5b4e451c-c5c9-4a29-b70a-1a12c7d6d312.png" width="207">
 
+#### Depth buffer
+
+A depth buffer, also known as a z-buffer, is a type of data buffer used in computer graphics to represent depth information of objects in 3D space from a particular perspective. Depth buffers are an aid to rendering a scene to ensure that the correct polygons properly occlude other polygons.
+
+<img src="https://www.cyanilux.com/tutorials/depth/Preview.png" width="220">
+
 <br>
 
 ## Prerequisites
