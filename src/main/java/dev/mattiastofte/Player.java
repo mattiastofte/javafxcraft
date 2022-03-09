@@ -52,7 +52,7 @@ public class Player {
         this.camera.setFieldOfView(80.0);
         this.camera.setTranslateX(-700.0);
         this.camera.setTranslateY(-400.0);
-        this.camera.setTranslateZ(450.0);
+        this.camera.setTranslateZ(460.0);
 
         /*
          * content.getChildren().addAll(testBody, axisX, axisZ, camera);
