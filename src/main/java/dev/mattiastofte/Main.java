@@ -3,11 +3,13 @@ package dev.mattiastofte;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point3D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
@@ -23,13 +25,18 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import javafx.scene.AmbientLight;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Main extends Application {
     String title = "Minecraft";
     String version = "1.0.0";
     String developer = "Mattias Tofte";
+
+    int currentFrame;
 
     public static int SCREEN_WIDTH = 1400;
     public static int SCREEN_HEIGHT = 800;
@@ -64,6 +71,16 @@ public class Main extends Application {
         Box axisY = new Box(2, 2000, 2);
         Box axisZ = new Box(2, 2, 2000);
 
+        // MONITOR SIZE
+        Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+        Double screenWidth = screenBounds.getWidth();
+        Double screenHeight = screenBounds.getHeight();
+
+        // CONTROLS
+        Double mouseSensitivity = 0.2;
+        Robot robot = new Robot();
+        robot.mouseMove(screenWidth / 2, screenHeight / 2);
+
         box.getTransforms().add(new Translate(100, 300, 0));
         box2.getTransforms().add(new Translate(100, 100, 0));
         box3.getTransforms().add(new Translate(150, 50, 0));
@@ -85,6 +102,7 @@ public class Main extends Application {
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
         scene.setCamera(player.camera);
+        scene.setCursor(Cursor.NONE);
 
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
 
@@ -113,11 +131,20 @@ public class Main extends Application {
             if (key.getCode() == KeyCode.DOWN) {
                 player.rotatePitch(-10.0);
             }
-            if (key.getCode() == KeyCode.LEFT) {
-                player.rotateYaw(-10.0);
-            }
-            if (key.getCode() == KeyCode.RIGHT) {
-                player.rotateYaw(10.0);
+            /*
+             * if (key.getCode() == KeyCode.LEFT) {
+             * player.rotateYaw(-10.0);
+             * }
+             * if (key.getCode() == KeyCode.RIGHT) {
+             * player.rotateYaw(10.0);
+             * }
+             */
+            if (key.getCode() == KeyCode.C) {
+                if (scene.getCamera() == player.camera) {
+                    scene.setCamera(sceneCamera);
+                } else {
+                    scene.setCamera(player.camera);
+                }
             }
         });
 
@@ -144,8 +171,49 @@ public class Main extends Application {
             }
         });
 
+        final AnimationTimer frameCounter = new AnimationTimer() {
+            @Override
+            public void handle(long arg0) {
+                currentFrame++;
+                if (currentFrame == 60) {
+                    currentFrame = 0;
+                }
+            };
+        };
+        final AnimationTimer handleMouse = new AnimationTimer() {
+            Double oldX = robot.getMouseX();
+            Double oldY = robot.getMouseY();
+            Double newX, newY;
+            Double deltaMouseX;
+            Double deltaMouseY;
+
+            @Override
+            public void handle(long arg0) {
+                newX = robot.getMouseX();
+                newY = robot.getMouseY();
+
+                if (newX < 50 || newX > screenWidth - 50 || newY < 50 || newY > screenHeight - 50) {
+                    robot.mouseMove(screenWidth / 2, screenHeight / 2);
+                    oldX = robot.getMouseX();
+                    oldY = robot.getMouseY();
+                    newX = robot.getMouseX();
+                    newY = robot.getMouseY();
+                } else {
+                    deltaMouseX = newX - oldX;
+                    deltaMouseY = newY - oldY;
+                    oldX = newX;
+                    oldY = newY;
+                    player.rotatePitch(-deltaMouseY * mouseSensitivity);
+                    player.rotateYaw(deltaMouseX * mouseSensitivity);
+                }
+
+            };
+        };
+
         // START ANIMATION TIMERS
         player.handleMovement.start();
+        handleMouse.start();
+        frameCounter.start();
 
         // STAGE PROPERTIES
         stage.setTitle(String.format("%s - %s", title, version));
