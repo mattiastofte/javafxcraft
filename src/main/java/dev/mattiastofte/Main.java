@@ -30,11 +30,9 @@ public class Main extends Application {
     String title = "Minecraft";
     String version = "1.0.0";
     String developer = "Mattias Tofte";
-    Double angleHorizontal = 0.0;
-    Double angleVertical = 0.0;
 
-    private static int WIDTH = 1400;
-    private static int HEIGHT = 800;
+    public static int SCREEN_WIDTH = 1400;
+    public static int SCREEN_HEIGHT = 800;
 
     // MOUSE VARIABLES
     Double deltaXMouseInput = 0.0;
@@ -54,16 +52,22 @@ public class Main extends Application {
         Box box4 = new Box(50, 50, 50);
         Player player = new Player();
 
+        // SCENE CAMERA
+        PerspectiveCamera sceneCamera = new PerspectiveCamera();
+        sceneCamera.setFieldOfView(80.0);
+        sceneCamera.setTranslateX(-200.0);
+        sceneCamera.setTranslateY(-300.0);
+        sceneCamera.setTranslateZ(-300.0);
+
         // AXIS
-        Box axisX = new Box(20000, 2, 2);
-        Box axisY = new Box(2, 20000, 2);
-        Box axisZ = new Box(2, 2, 20000);
+        Box axisX = new Box(2000, 2, 2);
+        Box axisY = new Box(2, 2000, 2);
+        Box axisZ = new Box(2, 2, 2000);
 
         box.getTransforms().add(new Translate(100, 300, 0));
         box2.getTransforms().add(new Translate(100, 100, 0));
         box3.getTransforms().add(new Translate(150, 50, 0));
         box4.getTransforms().add(new Translate(100, 350, 0));
-
         box.setMaterial(new PhongMaterial(Color.BLUE));
         box2.setMaterial(new PhongMaterial(Color.YELLOW));
         box3.setMaterial(new PhongMaterial(Color.GREEN));
@@ -73,22 +77,12 @@ public class Main extends Application {
         axisY.setMaterial(new PhongMaterial(Color.GREEN));
         axisZ.setMaterial(new PhongMaterial(Color.BLUE));
 
-        Xform cameraAxis = new Xform();
-        cameraAxis.rx.setAngle(180);
-
         Group root = new Group();
-        root.getChildren().add(cameraAxis);
-        cameraAxis.getChildren().add(player.camera);
 
-        root.getChildren().add(box);
-        root.getChildren().add(box2);
-        root.getChildren().add(box3);
-        root.getChildren().add(box4);
-        root.getChildren().add(axisX);
-        root.getChildren().add(axisY);
-        root.getChildren().add(axisZ);
+        root.getChildren().addAll(
+                box, box2, box3, box4, axisX, axisY, axisZ, player.localAxis);
 
-        Scene scene = new Scene(root, WIDTH, HEIGHT, true);
+        Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
         scene.setCamera(player.camera);
 
@@ -114,20 +108,16 @@ public class Main extends Application {
                 player.setVelocityY(8.0);
             }
             if (key.getCode() == KeyCode.UP) {
-                angleVertical -= 10.0;
-                cameraAxis.rx.setAngle(angleVertical);
+                player.rotatePitch(10.0);
             }
             if (key.getCode() == KeyCode.DOWN) {
-                angleVertical += 10.0;
-                cameraAxis.rx.setAngle(angleVertical);
+                player.rotatePitch(-10.0);
             }
             if (key.getCode() == KeyCode.LEFT) {
-                angleHorizontal -= 10.0;
-                cameraAxis.ry.setAngle(angleHorizontal);
+                player.rotateYaw(-10.0);
             }
             if (key.getCode() == KeyCode.RIGHT) {
-                angleHorizontal += 10.0;
-                cameraAxis.ry.setAngle(angleHorizontal);
+                player.rotateYaw(10.0);
             }
         });
 
@@ -154,19 +144,8 @@ public class Main extends Application {
             }
         });
 
-        final AnimationTimer orbit = new AnimationTimer() {
-
-            @Override
-            public void handle(long arg0) {
-
-                // HANDLE TRANSLATE MOVEMENT
-                box4.getTransforms().add(new Rotate(2.0, 0.0, 200.0, 200.0));
-            };
-        };
-
         // START ANIMATION TIMERS
         player.handleMovement.start();
-        orbit.start();
 
         // STAGE PROPERTIES
         stage.setTitle(String.format("%s - %s", title, version));
