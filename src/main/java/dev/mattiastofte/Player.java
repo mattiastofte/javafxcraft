@@ -53,7 +53,6 @@ public class Player {
         this.camera.setTranslateX(-700.0);
         this.camera.setTranslateY(-400.0);
         this.camera.setTranslateZ(460.0);
-
         /*
          * content.getChildren().addAll(testBody, axisX, axisZ, camera);
          * localAxis.getChildren().addAll(content, axisY);
