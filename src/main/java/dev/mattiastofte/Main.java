@@ -1,6 +1,7 @@
 package dev.mattiastofte;
 
 import java.util.ArrayList;
+import java.util.FormatterClosedException;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
@@ -13,6 +14,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -22,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
@@ -35,7 +39,7 @@ import javafx.util.Duration;
 
 public class Main extends Application {
     String title = "Minecraft";
-    String version = "1.0.0";
+    String version = "1.1.0";
     String developer = "Mattias Tofte";
 
     int currentFrame;
@@ -56,20 +60,20 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        // CREATE OBJECTS
-        Box box = new Box(50, 50, 50);
-        Box box2 = new Box(50, 50, 50);
-        Box box3 = new Box(50, 50, 50);
-        Box box4 = new Box(50, 50, 50);
-
         // TRIANGLE MESH
-        TriangleMesh test = new TriangleMesh();
+        Voxel example = new Voxel(0, 0, 0, 0);
+        example.generateMesh(true, true, true, true, true, true);
+        MeshView mesh = new MeshView(example.mesh);
 
-        // POINTS
-        float points[] = { 0, 0, 0, 10, 10, 10, 20, 20, 20 };
-        test.getPoints().addAll(points);
+        PhongMaterial texture = new PhongMaterial();
+        texture.setDiffuseMap(new Image(getClass().getResourceAsStream("texture.jpg")));
+
+        texture.setSpecularPower(0.0f);
+        mesh.setMaterial(texture);
 
         Player player = new Player();
+        // Chunk chunk1 = new Chunk();
+        // chunk1.generateMesh();
 
         // SCENE CAMERA
         PerspectiveCamera sceneCamera = new PerspectiveCamera();
@@ -93,23 +97,16 @@ public class Main extends Application {
         Robot robot = new Robot();
         robot.mouseMove(screenWidth / 2, screenHeight / 2);
 
-        box.getTransforms().add(new Translate(100, 300, 0));
-        box2.getTransforms().add(new Translate(100, 100, 0));
-        box3.getTransforms().add(new Translate(150, 50, 0));
-        box4.getTransforms().add(new Translate(100, 350, 0));
-        box.setMaterial(new PhongMaterial(Color.BLUE));
-        box2.setMaterial(new PhongMaterial(Color.YELLOW));
-        box3.setMaterial(new PhongMaterial(Color.GREEN));
-        box4.setMaterial(new PhongMaterial(Color.ORANGE));
-
         axisX.setMaterial(new PhongMaterial(Color.RED));
         axisY.setMaterial(new PhongMaterial(Color.GREEN));
         axisZ.setMaterial(new PhongMaterial(Color.BLUE));
 
+        AmbientLight sunLight = new AmbientLight();
+
         Group root = new Group();
 
         root.getChildren().addAll(
-                box, box2, box3, box4, axisX, axisY, axisZ, player.localAxis);
+                axisX, axisY, axisZ, player.localAxis, mesh, sunLight /* chunk1.mesh */);
 
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
