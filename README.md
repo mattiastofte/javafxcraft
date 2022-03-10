@@ -17,6 +17,7 @@ Currently looking to implement these features:
 - [ ] [Voxel-mesh generator](https://github.com/mattiastofte/minecraft-clone/issues/2)
 - [ ] [Data-structure](https://github.com/mattiastofte/minecraft-clone/issues/3)
 - [ ] [Block modification](https://github.com/mattiastofte/minecraft-clone/issues/4)
+<br>
 ![Voxel_Mesh_Culling](https://user-images.githubusercontent.com/37273026/157760535-35f8b997-cc3b-40a5-ad4c-bf750b181b10.gif)
 
 #### Mesh generator
