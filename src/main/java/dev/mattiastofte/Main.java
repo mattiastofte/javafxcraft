@@ -16,6 +16,8 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.robot.Robot;
@@ -49,6 +51,8 @@ public class Main extends Application {
         launch(args);
     }
 
+    MediaPlayer mixer;
+
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -57,6 +61,14 @@ public class Main extends Application {
         Box box2 = new Box(50, 50, 50);
         Box box3 = new Box(50, 50, 50);
         Box box4 = new Box(50, 50, 50);
+
+        // TRIANGLE MESH
+        TriangleMesh test = new TriangleMesh();
+
+        // POINTS
+        float points[] = { 0, 0, 0, 10, 10, 10, 20, 20, 20 };
+        test.getPoints().addAll(points);
+
         Player player = new Player();
 
         // SCENE CAMERA
