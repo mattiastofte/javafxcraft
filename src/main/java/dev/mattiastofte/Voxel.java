@@ -1,5 +1,6 @@
 package dev.mattiastofte;
 
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +13,7 @@ public class Voxel {
     int z;
     int id;
     TriangleMesh mesh;
+    MeshView meshView;
     ArrayList<Integer> points;
     ArrayList<Float> texCoords;
     ArrayList<Integer> faces;
@@ -40,7 +42,7 @@ public class Voxel {
         );
     }
 
-    public void generateMesh(Boolean north, Boolean east, Boolean south, Boolean west, Boolean up, Boolean down) {
+    public void generateMesh(ArrayList<Boolean> neighbours) {
 
         // GENERATE ARRAYS
         mesh.getPoints().clear();
@@ -50,7 +52,7 @@ public class Voxel {
         int pointIndex = 0; // index for face and texture points
 
         // GENERATE NORTH FACE
-        if (north) {
+        if (!neighbours.get(0)) {
             mesh.getPoints().addAll(
                     0, 0, 64,
                     0, -64, 64,
@@ -63,8 +65,8 @@ public class Voxel {
             pointIndex += 4;
         }
 
-        // GENERATE EAST FACE
-        if (east) {
+        // GENERATE SOUTH FACE
+        if (!neighbours.get(2)) {
             mesh.getPoints().addAll(
                     64, 0, 0,
                     64, 0, 64,
@@ -78,7 +80,7 @@ public class Voxel {
         }
 
         // GENERATE WEST FACE
-        if (south) {
+        if (!neighbours.get(1)) {
             mesh.getPoints().addAll(
                     0, 0, 0,
                     64, 0, 0,
@@ -92,7 +94,7 @@ public class Voxel {
         }
 
         // GENERATE WEST FACE
-        if (west) {
+        if (!neighbours.get(3)) {
             mesh.getPoints().addAll(
                     0, 0, 0,
                     0, -64, 0,
@@ -106,7 +108,7 @@ public class Voxel {
         }
 
         // GENERATE UP FACE
-        if (up) {
+        if (!neighbours.get(4)) {
             mesh.getPoints().addAll(
                     0, -64, 0,
                     64, -64, 0,
@@ -120,7 +122,7 @@ public class Voxel {
         }
 
         // GENERATE DOWN FACE
-        if (down) {
+        if (!neighbours.get(5)) {
             mesh.getPoints().addAll(
                     64, 0, 64,
                     64, 0, 0,
@@ -131,6 +133,24 @@ public class Voxel {
                     pointIndex, 4, pointIndex + 2, 6, pointIndex + 3, 7 // SECOND VERTEX
             );
             pointIndex += 4;
+        }
+
+        translate();
+        this.meshView = new MeshView(mesh);
+    }
+
+    // MOVE POINTS ACCORDING TO X, Y, Z
+    public void translate() {
+        for (int i = 0; i < mesh.getPoints().size(); i++) {
+            if (i % 3 == 0) {
+                mesh.getPoints().set(i, mesh.getPoints().get(i) + x);
+            }
+            if (i % 3 == 1) {
+                mesh.getPoints().set(i, mesh.getPoints().get(i) + y);
+            }
+            if (i % 3 == 2) {
+                mesh.getPoints().set(i, mesh.getPoints().get(i) + z);
+            }
         }
     }
 }

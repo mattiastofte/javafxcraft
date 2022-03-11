@@ -13,6 +13,7 @@ import javafx.geometry.Point3D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.PointLight;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.Image;
@@ -60,17 +61,6 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        // TRIANGLE MESH
-        Voxel example = new Voxel(0, 0, 0, 0);
-        example.generateMesh(true, true, true, true, true, true);
-        MeshView mesh = new MeshView(example.mesh);
-
-        PhongMaterial texture = new PhongMaterial();
-        texture.setDiffuseMap(new Image(getClass().getResourceAsStream("texture.jpg")));
-
-        texture.setSpecularPower(0.0f);
-        mesh.setMaterial(texture);
-
         Player player = new Player();
         // Chunk chunk1 = new Chunk();
         // chunk1.generateMesh();
@@ -92,6 +82,8 @@ public class Main extends Application {
         Double screenWidth = screenBounds.getWidth();
         Double screenHeight = screenBounds.getHeight();
 
+        // TEST
+
         // CONTROLS
         Double mouseSensitivity = 0.2;
         Robot robot = new Robot();
@@ -102,13 +94,24 @@ public class Main extends Application {
         axisZ.setMaterial(new PhongMaterial(Color.BLUE));
 
         AmbientLight sunLight = new AmbientLight();
+        // PointLight pointLight = new PointLight(Color.rgb(255, 255, 255, 0.25));
 
         Group root = new Group();
 
         root.getChildren().addAll(
-                axisX, axisY, axisZ, player.localAxis, mesh, sunLight /* chunk1.mesh */);
+                axisX, axisY, axisZ, player.localAxis, sunLight/* chunk1.mesh */);
 
-        Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, true);
+        for (int x = 0; x < 3; x++) {
+            for (int z = 0; z < 3; z++) {
+                Chunk chunk = new Chunk();
+                chunk.generateChunk();
+                chunk.group.setTranslateX(1024 * x);
+                chunk.group.setTranslateZ(1024 * z);
+                root.getChildren().add(chunk.group);
+            }
+        }
+
+        Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, true, SceneAntialiasing.BALANCED);
 
         scene.setCamera(player.camera);
         scene.setCursor(Cursor.NONE);
