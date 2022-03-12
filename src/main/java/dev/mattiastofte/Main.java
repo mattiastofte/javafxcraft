@@ -1,7 +1,6 @@
 package dev.mattiastofte;
 
 import java.util.ArrayList;
-import java.util.FormatterClosedException;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
@@ -28,6 +27,7 @@ import javafx.scene.robot.Robot;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
@@ -52,6 +52,8 @@ public class Main extends Application {
     Double deltaXMouseInput = 0.0;
     Double deltaYMouseInput = 0.0;
 
+    Text framerateText = new Text("45 fps");
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -71,6 +73,7 @@ public class Main extends Application {
         sceneCamera.setTranslateX(-200.0);
         sceneCamera.setTranslateY(-300.0);
         sceneCamera.setTranslateZ(-300.0);
+        Textures textures = new Textures();
 
         // AXIS
         Box axisX = new Box(2000, 2, 2);
@@ -95,23 +98,22 @@ public class Main extends Application {
 
         AmbientLight sunLight = new AmbientLight();
         // PointLight pointLight = new PointLight(Color.rgb(255, 255, 255, 0.25));
-
         Group root = new Group();
 
         root.getChildren().addAll(
                 axisX, axisY, axisZ, player.localAxis, sunLight/* chunk1.mesh */);
 
-        for (int x = 0; x < 3; x++) {
-            for (int z = 0; z < 3; z++) {
-                Chunk chunk = new Chunk();
-                chunk.generateChunk();
+        for (int x = 0; x < 2; x++) {
+            for (int z = 0; z < 2; z++) {
+                Chunk chunk = new Chunk(textures);
+                chunk.generateChunk(chunk.data);
                 chunk.group.setTranslateX(1024 * x);
                 chunk.group.setTranslateZ(1024 * z);
                 root.getChildren().add(chunk.group);
             }
         }
 
-        Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, true, SceneAntialiasing.BALANCED);
+        Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, true, SceneAntialiasing.DISABLED);
 
         scene.setCamera(player.camera);
         scene.setCursor(Cursor.NONE);

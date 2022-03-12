@@ -34,17 +34,6 @@ public class Player {
         this.velocity = new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0));
         this.testBody = new Box(30, 30, 30);
 
-        /*
-         * this.axisX = new Box(200, 1, 1);
-         * this.axisY = new Box(1, 200, 1);
-         * this.axisZ = new Box(1, 1, 200);
-         * 
-         * this.axisX.setMaterial(new PhongMaterial(Color.RED));
-         * this.axisZ.setTranslateZ(100);
-         * this.axisY.setMaterial(new PhongMaterial(Color.GREEN));
-         * this.axisZ.setMaterial(new PhongMaterial(Color.BLUE));
-         */
-
         this.localAxis = new XGroup();
         this.content = new XGroup();
 
@@ -54,6 +43,7 @@ public class Player {
         this.camera.setTranslateX(-700.0);
         this.camera.setTranslateY(-400.0);
         this.camera.setTranslateZ(460.0);
+
         /*
          * content.getChildren().addAll(testBody, axisX, axisZ, camera);
          * localAxis.getChildren().addAll(content, axisY);
@@ -109,7 +99,6 @@ public class Player {
     }
 
     // ANIMATION TIMERS
-
     final AnimationTimer handleMovement = new AnimationTimer() {
 
         @Override
@@ -117,28 +106,6 @@ public class Player {
 
             // HANDLE TRANSLATE MOVEMENT
             updatePos();
-
-            /*
-             * Rotate ry = new Rotate(10.0,
-             * // camera rotates around its location
-             * cameraPos.getX(), cameraPos.getY(), cameraPos.getZ(),
-             * Rotate.Y_AXIS);
-             * 
-             * Translate cameraTranslate = new Translate(cameraPos.getX(), cameraPos.getY(),
-             * cameraPos.getZ());
-             * camera.setTranslateY(cameraPos.getY());
-             * camera.setTranslateX(cameraPos.getX());
-             * 
-             * // cameraX += velX;
-             * // camera.setTranslateX(cameraX);
-             * // cameraZ += velZ;
-             * // camera.setTranslateZ(cameraZ);
-             * // cameraY += velY;
-             * // camera.setTranslateY(cameraY);
-             * camera.setRotationAxis(Rotate.Y_AXIS);
-             * camera.setRotate(365.0);
-             * // new Robot().mouseMove(600, 200);
-             */
         };
     };
 }

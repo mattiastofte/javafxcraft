@@ -3,10 +3,8 @@ package dev.mattiastofte;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 // DATA-CLASS TO REPRESENT VOXELS
-
 public class Voxel {
     int x;
     int y;
@@ -14,9 +12,6 @@ public class Voxel {
     int id;
     TriangleMesh mesh;
     MeshView meshView;
-    ArrayList<Integer> points;
-    ArrayList<Float> texCoords;
-    ArrayList<Integer> faces;
 
     public Voxel(int x, int y, int z, int id) {
         this.x = x;
@@ -49,7 +44,7 @@ public class Voxel {
         mesh.getFaces().clear();
         mesh.getPoints().clear();
 
-        int pointIndex = 0; // index for face and texture points
+        int i = 0; // index for face and texture points
 
         // GENERATE NORTH FACE
         if (!neighbours.get(0)) {
@@ -59,10 +54,10 @@ public class Voxel {
                     64, -64, 64,
                     64, 0, 64);
             mesh.getFaces().addAll(
-                    pointIndex, 10, pointIndex + 1, 11, pointIndex + 2, 6, // FIRST VERTEX
-                    pointIndex, 10, pointIndex + 2, 6, pointIndex + 3, 7 // SECOND VERTEX
+                    i, 10, i + 1, 11, i + 2, 6, // FIRST VERTEX
+                    i, 10, i + 2, 6, i + 3, 7 // SECOND VERTEX
             );
-            pointIndex += 4;
+            i += 4;
         }
 
         // GENERATE SOUTH FACE
@@ -73,10 +68,10 @@ public class Voxel {
                     64, -64, 64,
                     64, -64, 0);
             mesh.getFaces().addAll(
-                    pointIndex, 2, pointIndex + 1, 3, pointIndex + 2, 4, // FIRST VERTEX
-                    pointIndex, 2, pointIndex + 2, 4, pointIndex + 3, 1 // SECOND VERTEX
+                    i, 2, i + 1, 3, i + 2, 4, // FIRST VERTEX
+                    i, 2, i + 2, 4, i + 3, 1 // SECOND VERTEX
             );
-            pointIndex += 4;
+            i += 4;
         }
 
         // GENERATE WEST FACE
@@ -87,10 +82,10 @@ public class Voxel {
                     64, -64, 0,
                     0, -64, 0);
             mesh.getFaces().addAll(
-                    pointIndex, 8, pointIndex + 1, 9, pointIndex + 2, 10, // FIRST VERTEX
-                    pointIndex, 8, pointIndex + 2, 10, pointIndex + 3, 7 // SECOND VERTEX
+                    i, 8, i + 1, 9, i + 2, 10, // FIRST VERTEX
+                    i, 8, i + 2, 10, i + 3, 7 // SECOND VERTEX
             );
-            pointIndex += 4;
+            i += 4;
         }
 
         // GENERATE WEST FACE
@@ -101,10 +96,10 @@ public class Voxel {
                     0, -64, 64,
                     0, 0, 64);
             mesh.getFaces().addAll(
-                    pointIndex, 8, pointIndex + 1, 7, pointIndex + 2, 4, // FIRST VERTEX
-                    pointIndex, 8, pointIndex + 2, 4, pointIndex + 3, 3 // SECOND VERTEX
+                    i, 8, i + 1, 7, i + 2, 4, // FIRST VERTEX
+                    i, 8, i + 2, 4, i + 3, 3 // SECOND VERTEX
             );
-            pointIndex += 4;
+            i += 4;
         }
 
         // GENERATE UP FACE
@@ -115,10 +110,10 @@ public class Voxel {
                     64, -64, 64,
                     0, -64, 64);
             mesh.getFaces().addAll(
-                    pointIndex, 1, pointIndex + 1, 4, pointIndex + 2, 5, // FIRST VERTEX
-                    pointIndex, 1, pointIndex + 2, 5, pointIndex + 3, 0 // SECOND VERTEX
+                    i, 1, i + 1, 4, i + 2, 5, // FIRST VERTEX
+                    i, 1, i + 2, 5, i + 3, 0 // SECOND VERTEX
             );
-            pointIndex += 4;
+            i += 4;
         }
 
         // GENERATE DOWN FACE
@@ -129,14 +124,19 @@ public class Voxel {
                     0, 0, 0,
                     0, 0, 64);
             mesh.getFaces().addAll(
-                    pointIndex, 4, pointIndex + 1, 5, pointIndex + 2, 6, // FIRST VERTEX
-                    pointIndex, 4, pointIndex + 2, 6, pointIndex + 3, 7 // SECOND VERTEX
+                    i, 4, i + 1, 5, i + 2, 6, // FIRST VERTEX
+                    i, 4, i + 2, 6, i + 3, 7 // SECOND VERTEX
             );
-            pointIndex += 4;
+            i += 4;
         }
 
         translate();
         this.meshView = new MeshView(mesh);
+
+        // ADD CORRECT TEXTURE BY BLOCK ID
+        // if (this.id == 1) {
+
+        // }
     }
 
     // MOVE POINTS ACCORDING TO X, Y, Z
