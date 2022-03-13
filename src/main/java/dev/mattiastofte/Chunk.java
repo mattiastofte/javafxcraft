@@ -2,55 +2,86 @@ package dev.mattiastofte;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import javafx.scene.Group;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.DrawMode;
-
-import java.util.concurrent.ThreadLocalRandom;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.TriangleMesh;
 
 public class Chunk {
-    int[][][] data;
-    Group group;
-    PhongMaterial texture;
+    Byte[][][] data;
+    TriangleMesh meshPoints;
+    MeshView mesh;
+    Textures textures;
+    int m; // x-coordinate for chunks
+    int n; // z-coordinate for chunks
 
-    public Chunk() {
-        this.texture = new PhongMaterial();
-        this.texture.setDiffuseMap(new Image(getClass().getResourceAsStream("texture.jpg")));
-        this.texture.setSpecularPower(0.0f);
-
-        this.data = new int[16][64][16];
-        for (int x = 0; x <= 15; x++) {
-            for (int y = 0; y <= 63; y++) {
-                for (int z = 0; z <= 15; z++) {
-                    if (ThreadLocalRandom.current().nextInt(0, y + 1) == 1) {
-                        this.data[x][y][z] = 1;
-                    } else {
-                        this.data[x][y][z] = 0;
-                    }
-                }
-            }
-        }
-        this.group = new Group();
+    public Chunk(int m, int n, Textures textures) {
+        this.data = new Byte[16][64][16];
+        this.textures = textures;
+        this.meshPoints = new TriangleMesh();
+        this.mesh = new MeshView(meshPoints);
+        this.mesh.setMaterial(textures.random);
+        this.m = m;
+        this.n = n;
+        UVMap();
     };
 
-    public void generateChunk() {
+    public void UVMap() {
+        this.meshPoints.getTexCoords().addAll(
+                0.0f, 0.0f, // 0
+                0.0f, 0.5f, // 1
+                0.0f, 1.0f, // 2
+                0.25f, 1.0f, // 3
+                0.25f, 0.5f, // 4
+                0.25f, 0.0f, // 5
+                0.5f, 0.0f, // 6
+                0.5f, 0.5f, // 7
+                0.5f, 1.0f, // 8
+                0.75f, 1.0f, // 9
+                0.75f, 0.5f, // 10
+                0.75f, 0.0f // 11
+        );
+    }
+
+    public void removeBlock(int x, int y, int z) {
+        this.data[x][y][z] = 0;
+    }
+
+    public void placeBlock(int x, int y, int z, Byte id) {
+        this.data[x][y][z] = id;
+
+    }
+
+    public void setData(Byte[][][] data) {
+        this.data = data;
+    }
+
+    // GENERATES THE MESH DATA
+    public void generateMeshPoints() {
+        clearMesh();
         for (int x = 0; x <= 15; x++) {
             for (int y = 0; y <= 63; y++) {
                 for (int z = 0; z <= 15; z++) {
                     if (this.data[x][y][z] == 1) {
                         ArrayList<Boolean> neighbours = getNeighbours(x, y, z);
                         Voxel voxel = new Voxel(x * 64, y * (-64), z * 64, 1);
-                        voxel.generateMesh(neighbours);
-                        voxel.meshView.setMaterial(this.texture);
-                        group.getChildren().add(voxel.meshView);
+                        voxel.generateMeshData(neighbours, this.meshPoints.getPoints().size() / 3);
+                        this.meshPoints.getPoints().addAll(voxel.points.getPoints());
+                        this.meshPoints.getFaces().addAll(voxel.points.getFaces());
                     }
                 }
             }
         }
+    }
+
+    // GENERATES MESH
+    public void generateMesh() {
+        generateMeshPoints();
+        this.mesh.setMesh(this.meshPoints);
+    }
+
+    // CLEARS MESH DATA
+    public void clearMesh() {
+        this.meshPoints.getPoints().clear();
+        this.meshPoints.getFaces().clear();
     }
 
     // SIMPLE CULLING ALGORITHM
@@ -77,24 +108,3 @@ public class Chunk {
         return neighbours;
     }
 }
-
-/*
- * Is there any particular reason this is being combined into one mesh to begin
- * with?
- * You can generate each block as a separate mesh and I don't see how that would
- * change anything- you can even render it as 6 planes
- * per cube instead, pool the planes, and handle the whole thing as a
- * 3D-array-based logical construct,
- * instead of a physical one. Destroying one block would simply call "dirty" on
- * all neighboring blocks and tell
- * them to re-check which of their sides should exist based on the new void, and
- * they pull additional planes from the pool to those spots.
- * 
- * But no. Based on your current setup, I
- * really have no idea how you can optimize it- since you're constructing a
- * single mesh to serve as the whole landscape,
- * the only real way to speed things up would be to have a duplicate cache of
- * each individual cube's mesh that went into the final result,
- * so you can start sort of from the halfway point in the process. It would
- * speed things up, but it's twice the memory usage.
- */

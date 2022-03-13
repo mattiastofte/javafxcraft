@@ -1,7 +1,9 @@
 package dev.mattiastofte;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.FormatterClosedException;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
@@ -28,6 +30,7 @@ import javafx.scene.robot.Robot;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
@@ -43,7 +46,11 @@ public class Main extends Application {
     String version = "1.1.0";
     String developer = "Mattias Tofte";
 
-    int currentFrame;
+    // LOGGER
+    Logger logger = new Logger();
+
+    // SETTINGS
+    Double mouseSensitivity = 0.2;
 
     public static int SCREEN_WIDTH = 1400;
     public static int SCREEN_HEIGHT = 800;
@@ -56,62 +63,47 @@ public class Main extends Application {
         launch(args);
     }
 
-    MediaPlayer mixer;
-
     @Override
     public void start(Stage stage) throws Exception {
-
-        Player player = new Player();
-        // Chunk chunk1 = new Chunk();
-        // chunk1.generateMesh();
-
-        // SCENE CAMERA
-        PerspectiveCamera sceneCamera = new PerspectiveCamera();
-        sceneCamera.setFieldOfView(80.0);
-        sceneCamera.setTranslateX(-200.0);
-        sceneCamera.setTranslateY(-300.0);
-        sceneCamera.setTranslateZ(-300.0);
-
-        // AXIS
-        Box axisX = new Box(2000, 2, 2);
-        Box axisY = new Box(2, 2000, 2);
-        Box axisZ = new Box(2, 2, 2000);
 
         // MONITOR SIZE
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
         Double screenWidth = screenBounds.getWidth();
         Double screenHeight = screenBounds.getHeight();
 
-        // TEST
+        // CREATE OBJETS
+        Player player = new Player();
 
-        // CONTROLS
-        Double mouseSensitivity = 0.2;
-        Robot robot = new Robot();
-        robot.mouseMove(screenWidth / 2, screenHeight / 2);
-
+        // AXIS
+        Box axisX = new Box(2000, 2, 2);
+        Box axisY = new Box(2, 2000, 2);
+        Box axisZ = new Box(2, 2, 2000);
         axisX.setMaterial(new PhongMaterial(Color.RED));
         axisY.setMaterial(new PhongMaterial(Color.GREEN));
         axisZ.setMaterial(new PhongMaterial(Color.BLUE));
 
-        AmbientLight sunLight = new AmbientLight();
-        // PointLight pointLight = new PointLight(Color.rgb(255, 255, 255, 0.25));
+        // GENERATOR
+        Generator generator = new Generator();
 
-        Group root = new Group();
-
-        root.getChildren().addAll(
-                axisX, axisY, axisZ, player.localAxis, sunLight/* chunk1.mesh */);
-
-        for (int x = 0; x < 3; x++) {
-            for (int z = 0; z < 3; z++) {
-                Chunk chunk = new Chunk();
-                chunk.generateChunk();
-                chunk.group.setTranslateX(1024 * x);
-                chunk.group.setTranslateZ(1024 * z);
-                root.getChildren().add(chunk.group);
+        // GENERATE CHUNKS
+        for (int m = 0; m < 20; m++) {
+            for (int n = 0; n < 20; n++) {
+                generator.getChunk(m, n);
             }
         }
 
-        Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, true, SceneAntialiasing.BALANCED);
+        // CONTROLS
+        Robot robot = new Robot();
+        robot.mouseMove(screenWidth / 2, screenHeight / 2);
+
+        AmbientLight sunLight = new AmbientLight();
+        // PointLight pointLight = new PointLight(Color.rgb(255, 255, 255, 0.25));
+        Group root = new Group();
+
+        root.getChildren().addAll(
+                axisX, axisY, axisZ, player.localAxis, sunLight, generator.chunkGroup/* chunk1.mesh */);
+
+        Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, true, SceneAntialiasing.DISABLED);
 
         scene.setCamera(player.camera);
         scene.setCursor(Cursor.NONE);
@@ -137,27 +129,6 @@ public class Main extends Application {
             if (key.getCode() == KeyCode.SHIFT) {
                 player.setVelocityY(8.0);
             }
-            if (key.getCode() == KeyCode.UP) {
-                player.rotatePitch(10.0);
-            }
-            if (key.getCode() == KeyCode.DOWN) {
-                player.rotatePitch(-10.0);
-            }
-            /*
-             * if (key.getCode() == KeyCode.LEFT) {
-             * player.rotateYaw(-10.0);
-             * }
-             * if (key.getCode() == KeyCode.RIGHT) {
-             * player.rotateYaw(10.0);
-             * }
-             */
-            if (key.getCode() == KeyCode.C) {
-                if (scene.getCamera() == player.camera) {
-                    scene.setCamera(sceneCamera);
-                } else {
-                    scene.setCamera(player.camera);
-                }
-            }
         });
 
         scene.addEventHandler(KeyEvent.KEY_RELEASED, (key) -> {
@@ -182,16 +153,6 @@ public class Main extends Application {
                 player.setVelocityY(0.0);
             }
         });
-
-        final AnimationTimer frameCounter = new AnimationTimer() {
-            @Override
-            public void handle(long arg0) {
-                currentFrame++;
-                if (currentFrame == 60) {
-                    currentFrame = 0;
-                }
-            };
-        };
         final AnimationTimer handleMouse = new AnimationTimer() {
             Double oldX = robot.getMouseX();
             Double oldY = robot.getMouseY();
@@ -210,6 +171,7 @@ public class Main extends Application {
                     oldY = robot.getMouseY();
                     newX = robot.getMouseX();
                     newY = robot.getMouseY();
+                    System.out.println(generator.chunkGroup.getChildren());
                 } else {
                     deltaMouseX = newX - oldX;
                     deltaMouseY = newY - oldY;
@@ -225,7 +187,6 @@ public class Main extends Application {
         // START ANIMATION TIMERS
         player.handleMovement.start();
         handleMouse.start();
-        frameCounter.start();
 
         // STAGE PROPERTIES
         stage.setTitle(String.format("%s - %s", title, version));
