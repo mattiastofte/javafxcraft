@@ -14,8 +14,8 @@ The game will involve a save-to-file feature where chunk- and block-data gets sa
 ## Features
 Currently looking to implement these features:
 - [x] [Camera-controls](https://github.com/mattiastofte/minecraft-clone/issues/1)
-- [ ] [Voxel-mesh generator](https://github.com/mattiastofte/minecraft-clone/issues/2)
-- [ ] [Data-structure](https://github.com/mattiastofte/minecraft-clone/issues/3)
+- [x] [Voxel-mesh generator](https://github.com/mattiastofte/minecraft-clone/issues/2)
+- [x] [Data-structure](https://github.com/mattiastofte/minecraft-clone/issues/3)
 - [ ] [Block modification](https://github.com/mattiastofte/minecraft-clone/issues/4)
 <br>
 
