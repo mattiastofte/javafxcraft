@@ -42,7 +42,7 @@ One chunk consists of a matrix that's 16x64x16 voxels in size. That's a total of
 The DataHandler-class saves the matrixes to a custom .data file that consists of % 16384 bytes. Each byte represents a value from 0 to 255 in the byte array. Since this file linearly gets bigger as the player loads new chunks, we also need a .dat file to store the byte offset of the chunks file. This offset gets translated to a HashMap with the key format "m:n" for easy lookup convenience.
 
 <img src="https://user-images.githubusercontent.com/37273026/158081212-15ce5fea-933d-4ebf-86dd-b64311f1d429.png" width="520">
-
+Note: Thanks to [Sigurd](https://github.com/Sigurd-Pettersen/Sigurd-Pettersen) for helping me implement this feature
 
 ## Prerequisites
 To run this application requires the following:
