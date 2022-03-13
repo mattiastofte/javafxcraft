@@ -1,5 +1,8 @@
 package dev.mattiastofte;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
@@ -62,6 +65,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        System.out.println("A minecraft clone coded with ♡ by " + developer);
+        System.out.println("");
+        System.out.println("---------------- [DEBUG] ----------------");
+        System.out.println("");
+
+        // DATE FORMATTING
+        // final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
         Player player = new Player();
         // Chunk chunk1 = new Chunk();
@@ -73,7 +83,6 @@ public class Main extends Application {
         sceneCamera.setTranslateX(-200.0);
         sceneCamera.setTranslateY(-300.0);
         sceneCamera.setTranslateZ(-300.0);
-        Textures textures = new Textures();
 
         // AXIS
         Box axisX = new Box(2000, 2, 2);
@@ -96,22 +105,20 @@ public class Main extends Application {
         axisY.setMaterial(new PhongMaterial(Color.GREEN));
         axisZ.setMaterial(new PhongMaterial(Color.BLUE));
 
+        // GENERATOR
+        Generator generator = new Generator();
+        for (int m = 0; m < 5; m++) {
+            for (int n = 0; n < 5; n++) {
+                generator.getChunk(m, n);
+            }
+        }
+
         AmbientLight sunLight = new AmbientLight();
         // PointLight pointLight = new PointLight(Color.rgb(255, 255, 255, 0.25));
         Group root = new Group();
 
         root.getChildren().addAll(
-                axisX, axisY, axisZ, player.localAxis, sunLight/* chunk1.mesh */);
-
-        for (int x = 0; x < 2; x++) {
-            for (int z = 0; z < 2; z++) {
-                Chunk chunk = new Chunk(textures);
-                chunk.generateChunk(chunk.data);
-                chunk.group.setTranslateX(1024 * x);
-                chunk.group.setTranslateZ(1024 * z);
-                root.getChildren().add(chunk.group);
-            }
-        }
+                axisX, axisY, axisZ, player.localAxis, sunLight, generator.chunkGroup/* chunk1.mesh */);
 
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, true, SceneAntialiasing.DISABLED);
 
@@ -212,6 +219,7 @@ public class Main extends Application {
                     oldY = robot.getMouseY();
                     newX = robot.getMouseX();
                     newY = robot.getMouseY();
+                    System.out.println(generator.chunkGroup.getChildren());
                 } else {
                     deltaMouseX = newX - oldX;
                     deltaMouseY = newY - oldY;

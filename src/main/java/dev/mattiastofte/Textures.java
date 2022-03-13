@@ -8,7 +8,7 @@ public class Textures {
 
     public Textures() {
         this.random = new PhongMaterial();
-        this.random.setDiffuseMap(new Image(getClass().getResourceAsStream("texture.jpg")));
+        this.random.setDiffuseMap(new Image(getClass().getResourceAsStream("assets/textures/texture.jpg")));
         this.random.setSpecularPower(0.0f);
     }
 }

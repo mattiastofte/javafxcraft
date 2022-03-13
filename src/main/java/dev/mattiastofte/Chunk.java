@@ -2,53 +2,85 @@ package dev.mattiastofte;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import javafx.scene.Group;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
-
-import java.util.concurrent.ThreadLocalRandom;
+import javafx.scene.shape.TriangleMesh;
 
 public class Chunk {
     int[][][] data;
-    Group group;
+    TriangleMesh meshData;
+    MeshView mesh;
     Textures textures;
+    int m; // x-coordinate for chunks
+    int n; // z-coordinate for chunks
 
-    public Chunk(Textures textures) {
+    public Chunk(int m, int n, Textures textures) {
         this.data = new int[16][64][16];
         this.textures = textures;
-        for (int x = 0; x <= 15; x++) {
-            for (int y = 0; y <= 63; y++) {
-                for (int z = 0; z <= 15; z++) {
-                    if (y < 10) {
-                        this.data[x][y][z] = 1;
-                    } else {
-                        this.data[x][y][z] = 0;
-                    }
-                }
-            }
-        }
-        this.group = new Group();
+        this.meshData = new TriangleMesh();
+        this.mesh = new MeshView(meshData);
+        this.mesh.setMaterial(textures.random);
+        this.m = m;
+        this.n = n;
+        UVMap();
     };
 
-    public void generateChunk(int[][][] chunkData) {
+    public void UVMap() {
+        this.meshData.getTexCoords().addAll(
+                0.0f, 0.0f, // 0
+                0.0f, 0.5f, // 1
+                0.0f, 1.0f, // 2
+                0.25f, 1.0f, // 3
+                0.25f, 0.5f, // 4
+                0.25f, 0.0f, // 5
+                0.5f, 0.0f, // 6
+                0.5f, 0.5f, // 7
+                0.5f, 1.0f, // 8
+                0.75f, 1.0f, // 9
+                0.75f, 0.5f, // 10
+                0.75f, 0.0f // 11
+        );
+    }
+
+    public void setData(int[][][] data) {
+        this.data = data;
+    }
+
+    public void removeBlock(int x, int y, int z) {
+        this.data[x][y][z] = 0;
+    }
+
+    public void placeBlock(int x, int y, int z, int id) {
+        this.data[x][y][z] = id;
+    }
+
+    public void generateMeshData() {
+        clearMesh();
+
         for (int x = 0; x <= 15; x++) {
             for (int y = 0; y <= 63; y++) {
                 for (int z = 0; z <= 15; z++) {
-                    if (chunkData[x][y][z] == 1) {
+                    if (this.data[x][y][z] == 1) {
                         ArrayList<Boolean> neighbours = getNeighbours(x, y, z);
                         Voxel voxel = new Voxel(x * 64, y * (-64), z * 64, 1);
-                        voxel.generateMesh(neighbours);
-                        voxel.meshView.setMaterial(this.textures.random);
-                        group.getChildren().add(voxel.meshView);
+                        voxel.generateMeshData(neighbours, this.meshData.getPoints().size() / 3);
+                        this.meshData.getPoints().addAll(voxel.points.getPoints());
+                        this.meshData.getFaces().addAll(voxel.points.getFaces());
                     }
                 }
             }
         }
+
+        generateMesh();
+    }
+
+    public void generateMesh() {
+        this.mesh.setMesh(this.meshData);
+        System.out.println("break");
+    }
+
+    public void clearMesh() {
+        this.meshData.getPoints().clear();
+        this.meshData.getFaces().clear();
     }
 
     // SIMPLE CULLING ALGORITHM
