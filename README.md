@@ -40,7 +40,8 @@ This game has a simple depth buffer, also known as a z-buffer. This is a type of
 One chunk consists of a matrix that's 16x64x16 voxels in size. That's a total of 16384 voxels per chunk. It's therefore critical to efficiently save and read chunks. 
 
 The DataHandler-class saves the matrixes to a custom .data file that consists of % 16384 bytes. Each byte represents a value from 0 to 255 in the byte array. Since this file linearly gets bigger as the player loads new chunks, we also need a .dat file to store the byte offset of the chunks file. This offset gets translated to a HashMap with the key format "m:n", for easy lookup convenience.
-![diagram](https://user-images.githubusercontent.com/37273026/158081212-15ce5fea-933d-4ebf-86dd-b64311f1d429.png)
+
+<img src="https://user-images.githubusercontent.com/37273026/158081212-15ce5fea-933d-4ebf-86dd-b64311f1d429.png" width="520">
 
 
 ## Prerequisites
