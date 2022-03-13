@@ -46,7 +46,11 @@ public class Main extends Application {
     String version = "1.1.0";
     String developer = "Mattias Tofte";
 
-    int currentFrame;
+    // LOGGER
+    Logger logger = new Logger();
+
+    // SETTINGS
+    Double mouseSensitivity = 0.2;
 
     public static int SCREEN_WIDTH = 1400;
     public static int SCREEN_HEIGHT = 800;
@@ -55,63 +59,42 @@ public class Main extends Application {
     Double deltaXMouseInput = 0.0;
     Double deltaYMouseInput = 0.0;
 
-    Text framerateText = new Text("45 fps");
-
     public static void main(String[] args) {
         launch(args);
     }
 
-    MediaPlayer mixer;
-
     @Override
     public void start(Stage stage) throws Exception {
-        System.out.println("A minecraft clone coded with ♡ by " + developer);
-        System.out.println("");
-        System.out.println("---------------- [DEBUG] ----------------");
-        System.out.println("");
-
-        // DATE FORMATTING
-        // final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-        Player player = new Player();
-        // Chunk chunk1 = new Chunk();
-        // chunk1.generateMesh();
-
-        // SCENE CAMERA
-        PerspectiveCamera sceneCamera = new PerspectiveCamera();
-        sceneCamera.setFieldOfView(80.0);
-        sceneCamera.setTranslateX(-200.0);
-        sceneCamera.setTranslateY(-300.0);
-        sceneCamera.setTranslateZ(-300.0);
-
-        // AXIS
-        Box axisX = new Box(2000, 2, 2);
-        Box axisY = new Box(2, 2000, 2);
-        Box axisZ = new Box(2, 2, 2000);
 
         // MONITOR SIZE
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
         Double screenWidth = screenBounds.getWidth();
         Double screenHeight = screenBounds.getHeight();
 
-        // TEST
+        // CREATE OBJETS
+        Player player = new Player();
 
-        // CONTROLS
-        Double mouseSensitivity = 0.2;
-        Robot robot = new Robot();
-        robot.mouseMove(screenWidth / 2, screenHeight / 2);
-
+        // AXIS
+        Box axisX = new Box(2000, 2, 2);
+        Box axisY = new Box(2, 2000, 2);
+        Box axisZ = new Box(2, 2, 2000);
         axisX.setMaterial(new PhongMaterial(Color.RED));
         axisY.setMaterial(new PhongMaterial(Color.GREEN));
         axisZ.setMaterial(new PhongMaterial(Color.BLUE));
 
         // GENERATOR
         Generator generator = new Generator();
-        for (int m = 0; m < 5; m++) {
-            for (int n = 0; n < 5; n++) {
+
+        // GENERATE CHUNKS
+        for (int m = 0; m < 20; m++) {
+            for (int n = 0; n < 20; n++) {
                 generator.getChunk(m, n);
             }
         }
+
+        // CONTROLS
+        Robot robot = new Robot();
+        robot.mouseMove(screenWidth / 2, screenHeight / 2);
 
         AmbientLight sunLight = new AmbientLight();
         // PointLight pointLight = new PointLight(Color.rgb(255, 255, 255, 0.25));
@@ -146,27 +129,6 @@ public class Main extends Application {
             if (key.getCode() == KeyCode.SHIFT) {
                 player.setVelocityY(8.0);
             }
-            if (key.getCode() == KeyCode.UP) {
-                player.rotatePitch(10.0);
-            }
-            if (key.getCode() == KeyCode.DOWN) {
-                player.rotatePitch(-10.0);
-            }
-            /*
-             * if (key.getCode() == KeyCode.LEFT) {
-             * player.rotateYaw(-10.0);
-             * }
-             * if (key.getCode() == KeyCode.RIGHT) {
-             * player.rotateYaw(10.0);
-             * }
-             */
-            if (key.getCode() == KeyCode.C) {
-                if (scene.getCamera() == player.camera) {
-                    scene.setCamera(sceneCamera);
-                } else {
-                    scene.setCamera(player.camera);
-                }
-            }
         });
 
         scene.addEventHandler(KeyEvent.KEY_RELEASED, (key) -> {
@@ -191,16 +153,6 @@ public class Main extends Application {
                 player.setVelocityY(0.0);
             }
         });
-
-        final AnimationTimer frameCounter = new AnimationTimer() {
-            @Override
-            public void handle(long arg0) {
-                currentFrame++;
-                if (currentFrame == 60) {
-                    currentFrame = 0;
-                }
-            };
-        };
         final AnimationTimer handleMouse = new AnimationTimer() {
             Double oldX = robot.getMouseX();
             Double oldY = robot.getMouseY();
@@ -235,7 +187,6 @@ public class Main extends Application {
         // START ANIMATION TIMERS
         player.handleMovement.start();
         handleMouse.start();
-        frameCounter.start();
 
         // STAGE PROPERTIES
         stage.setTitle(String.format("%s - %s", title, version));

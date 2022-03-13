@@ -50,6 +50,7 @@ public class Player {
          */
         content.getChildren().addAll(testBody, camera);
         localAxis.getChildren().addAll(content);
+        this.testBody.setMaterial(new PhongMaterial(Color.GREEN));
     }
 
     // VELOCITY CONTROLS

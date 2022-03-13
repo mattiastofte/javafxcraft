@@ -6,18 +6,18 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 public class Chunk {
-    int[][][] data;
-    TriangleMesh meshData;
+    Byte[][][] data;
+    TriangleMesh meshPoints;
     MeshView mesh;
     Textures textures;
     int m; // x-coordinate for chunks
     int n; // z-coordinate for chunks
 
     public Chunk(int m, int n, Textures textures) {
-        this.data = new int[16][64][16];
+        this.data = new Byte[16][64][16];
         this.textures = textures;
-        this.meshData = new TriangleMesh();
-        this.mesh = new MeshView(meshData);
+        this.meshPoints = new TriangleMesh();
+        this.mesh = new MeshView(meshPoints);
         this.mesh.setMaterial(textures.random);
         this.m = m;
         this.n = n;
@@ -25,7 +25,7 @@ public class Chunk {
     };
 
     public void UVMap() {
-        this.meshData.getTexCoords().addAll(
+        this.meshPoints.getTexCoords().addAll(
                 0.0f, 0.0f, // 0
                 0.0f, 0.5f, // 1
                 0.0f, 1.0f, // 2
@@ -41,46 +41,47 @@ public class Chunk {
         );
     }
 
-    public void setData(int[][][] data) {
-        this.data = data;
-    }
-
     public void removeBlock(int x, int y, int z) {
         this.data[x][y][z] = 0;
     }
 
-    public void placeBlock(int x, int y, int z, int id) {
+    public void placeBlock(int x, int y, int z, Byte id) {
         this.data[x][y][z] = id;
+
     }
 
-    public void generateMeshData() {
-        clearMesh();
+    public void setData(Byte[][][] data) {
+        this.data = data;
+    }
 
+    // GENERATES THE MESH DATA
+    public void generateMeshPoints() {
+        clearMesh();
         for (int x = 0; x <= 15; x++) {
             for (int y = 0; y <= 63; y++) {
                 for (int z = 0; z <= 15; z++) {
                     if (this.data[x][y][z] == 1) {
                         ArrayList<Boolean> neighbours = getNeighbours(x, y, z);
                         Voxel voxel = new Voxel(x * 64, y * (-64), z * 64, 1);
-                        voxel.generateMeshData(neighbours, this.meshData.getPoints().size() / 3);
-                        this.meshData.getPoints().addAll(voxel.points.getPoints());
-                        this.meshData.getFaces().addAll(voxel.points.getFaces());
+                        voxel.generateMeshData(neighbours, this.meshPoints.getPoints().size() / 3);
+                        this.meshPoints.getPoints().addAll(voxel.points.getPoints());
+                        this.meshPoints.getFaces().addAll(voxel.points.getFaces());
                     }
                 }
             }
         }
-
-        generateMesh();
     }
 
+    // GENERATES MESH
     public void generateMesh() {
-        this.mesh.setMesh(this.meshData);
-        System.out.println("break");
+        generateMeshPoints();
+        this.mesh.setMesh(this.meshPoints);
     }
 
+    // CLEARS MESH DATA
     public void clearMesh() {
-        this.meshData.getPoints().clear();
-        this.meshData.getFaces().clear();
+        this.meshPoints.getPoints().clear();
+        this.meshPoints.getFaces().clear();
     }
 
     // SIMPLE CULLING ALGORITHM

@@ -11,36 +11,29 @@ public class Generator {
     Group chunkGroup;
     Textures textures = new Textures();
     String map;
+    DataHandler dataHandler;
 
     public Generator() {
+        this.map = "map1";
         this.loadedChunks = new ArrayList<Chunk>();
-        this.map = "test";
         this.chunkGroup = new Group();
+        this.dataHandler = new DataHandler(map);
     }
 
-    // FILE WRITER
+    // GET CHUNK
     public void getChunk(int m, int n) {
-        try { // CREATE/OPEN CHUNK FILE
-            File file = new File("src/main/java/dev/mattiastofte/data/map/" + map + "/" + String.valueOf(m) + "-"
-                    + String.valueOf(n) + ".txt"); // " + map + String.valueOf(m)
-            // + "-" + String.valueOf(n)
-            if (file.createNewFile()) {
-                Chunk chunk = generateChunk(m, n);
-                loadedChunks.add(chunk); // ADD CHUNKS TO LOADED CHUNKS
-                chunkGroup.getChildren().add(chunk.mesh);
-                System.out.println("[GENERATOR] Succesfully generated new chunk at " + file.getName());
-            } else {
-                System.out.println("[GENERATOR] Chunk already exists, loading chunk at " + String.valueOf(m) + ", "
-                        + String.valueOf(n) + "..");
-            }
-        } catch (IOException e) {
-            System.out.println("[ERROR] An error occurred.");
-            e.printStackTrace();
+        if (dataHandler.alreadyGenerated(m, n)) {
+            Byte[][][] data = dataHandler.readChunkData(m, n);
+            loadChunk(m, n, data);
+        } else {
+            Chunk chunk = generateChunk(m, n);
+            dataHandler.writeChunkData(m, n, chunk.data);
         }
     }
 
-    // GENERATE A NEW CHUNK
+    // GENERATE CHUNK
     public Chunk generateChunk(int m, int n) {
+        System.out.println(String.format("[GENERATOR] Generated chunk to chunks.dat at location m: %s n: %s", m, n));
         Chunk chunk = new Chunk(m, n, textures);
         for (int x = 0; x <= 15; x++) {
             for (int y = 0; y <= 63; y++) {
@@ -53,21 +46,43 @@ public class Generator {
                 }
             }
         }
-        chunk.generateMeshData(); // GENERATE CHUNK MESH
+        chunk.generateMeshPoints(); // GENERATE CHUNK MESH
+        chunk.generateMesh();
         chunk.mesh.setTranslateX(1024 * chunk.m);
         chunk.mesh.setTranslateZ(1024 * chunk.n);
+        chunkGroup.getChildren().add(chunk.mesh);
+        loadedChunks.add(chunk);
         return chunk;
     }
 
-    // LOAD CHUNK FROM FILE
-    // public void loadChunk() {
+    public void loadChunk(int m, int n, Byte[][][] data) {
+        System.out.println(String.format("[GENERATOR] Loaded chunk (%s,%s)", m, n));
+        Chunk chunk = new Chunk(m, n, textures);
+        chunk.setData(data);
+        chunk.generateMeshPoints();
+        chunk.generateMesh();
+        chunk.mesh.setTranslateX(1024 * chunk.m);
+        chunk.mesh.setTranslateZ(1024 * chunk.n);
+        chunkGroup.getChildren().add(chunk.mesh);
+        loadedChunks.add(chunk);
+    }
 
-    // }
+    public void unloadChunk(int m, int n) {
+        Boolean didUnload = false;
 
-    // GENERATE EXAMPLE WORLD
-    // public void generateExample() {
+        for (int i = 0; i > loadedChunks.size(); i++) {
+            if (loadedChunks.get(i).m == m) {
+                if (loadedChunks.get(i).n == n) {
+                    loadedChunks.remove(i);
+                    didUnload = true;
+                }
+            }
+        }
 
-    // }
+        if (!didUnload) {
+            throw new IllegalArgumentException(String.format("[GENERATOR] Could not unload chunk (%s,%s)", m, n));
+        }
+    }
 
     // GET CHUNK ARRAY
     public ArrayList<Chunk> getChunks() {
