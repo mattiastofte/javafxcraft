@@ -26,8 +26,8 @@ public class Voxel {
         this.points.getFaces().clear();
 
         int i = pointIndex; // index for face and texture points
+        int j = id - 1; // texture index
 
-        // GENERATE NORTH FACE
         // GENERATE NORTH FACE
         if (!neighbours.get(0)) {
             this.points.getPoints().addAll(
@@ -36,8 +36,8 @@ public class Voxel {
                     64, -64, 64,
                     64, 0, 64);
             this.points.getFaces().addAll(
-                    i, 10, i + 1, 11, i + 2, 6, // FIRST VERTEX
-                    i, 10, i + 2, 6, i + 3, 7 // SECOND VERTEX
+                    i, 0 + (4 * j), i + 1, 2 + (4 * j), i + 2, 2 + (4 * j), // FIRST VERTEX
+                    i, 0 + (4 * j), i + 2, 2 + (4 * j), i + 3, 3 + (4 * j)// SECOND VERTEX
             );
             i += 4;
         }
@@ -50,8 +50,8 @@ public class Voxel {
                     64, -64, 64,
                     64, -64, 0);
             this.points.getFaces().addAll(
-                    i, 2, i + 1, 3, i + 2, 4, // FIRST VERTEX
-                    i, 2, i + 2, 4, i + 3, 1 // SECOND VERTEX
+                    i, 0 + (4 * j), i + 1, 1 + (4 * j), i + 2, 2 + (4 * j), // FIRST VERTEX
+                    i, 0 + (4 * j), i + 2, 2 + (4 * j), i + 3, 3 + (4 * j)// SECOND VERTEX
             );
             i += 4;
         }
@@ -64,8 +64,8 @@ public class Voxel {
                     64, -64, 0,
                     0, -64, 0);
             this.points.getFaces().addAll(
-                    i, 8, i + 1, 9, i + 2, 10, // FIRST VERTEX
-                    i, 8, i + 2, 10, i + 3, 7 // SECOND VERTEX
+                    i, 0 + (4 * j), i + 1, 1 + (4 * j), i + 2, 2 + (4 * j), // FIRST VERTEX
+                    i, 0 + (4 * j), i + 2, 2 + (4 * j), i + 3, 3 + (4 * j)// SECOND VERTEX
             );
             i += 4;
         }
@@ -78,8 +78,8 @@ public class Voxel {
                     0, -64, 64,
                     0, 0, 64);
             this.points.getFaces().addAll(
-                    i, 8, i + 1, 7, i + 2, 4, // FIRST VERTEX
-                    i, 8, i + 2, 4, i + 3, 3 // SECOND VERTEX
+                    i, 0 + (4 * j), i + 1, 1 + (4 * j), i + 2, 2 + (4 * j), // FIRST VERTEX
+                    i, 0 + (4 * j), i + 2, 2 + (4 * j), i + 3, 3 + (4 * j) // SECOND VERTEX
             );
             i += 4;
         }
@@ -92,8 +92,8 @@ public class Voxel {
                     64, -64, 64,
                     0, -64, 64);
             this.points.getFaces().addAll(
-                    i, 1, i + 1, 4, i + 2, 5, // FIRST VERTEX
-                    i, 1, i + 2, 5, i + 3, 0 // SECOND VERTEX
+                    i, 0 + (4 * j), i + 1, 1 + (4 * j), i + 2, 2 + (4 * j), // FIRST VERTEX
+                    i, 0 + (4 * j), i + 2, 2 + (4 * j), i + 3, 3 + (4 * j)// SECOND VERTEX
             );
             i += 4;
         }
@@ -106,8 +106,8 @@ public class Voxel {
                     0, 0, 0,
                     0, 0, 64);
             this.points.getFaces().addAll(
-                    i, 4, i + 1, 5, i + 2, 6, // FIRST VERTEX
-                    i, 4, i + 2, 6, i + 3, 7 // SECOND VERTEX
+                    i, 0 + (4 * j), i + 1, 1 + (4 * j), i + 2, 2 + (4 * j), // FIRST VERTEX
+                    i, 0 + (4 * j), i + 2, 2 + (4 * j), i + 3, 3 + (4 * j) // SECOND VERTEX
             );
             i += 4;
         }

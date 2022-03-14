@@ -2,6 +2,8 @@ package dev.mattiastofte;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
+
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
@@ -18,27 +20,24 @@ public class Chunk {
         this.textures = textures;
         this.meshPoints = new TriangleMesh();
         this.mesh = new MeshView(meshPoints);
-        this.mesh.setMaterial(textures.random);
+        this.mesh.setMaterial(textures.blocks);
         this.m = m;
         this.n = n;
-        UVMap();
+        loadUVMap();
     };
 
-    public void UVMap() {
-        this.meshPoints.getTexCoords().addAll(
-                0.0f, 0.0f, // 0
-                0.0f, 0.5f, // 1
-                0.0f, 1.0f, // 2
-                0.25f, 1.0f, // 3
-                0.25f, 0.5f, // 4
-                0.25f, 0.0f, // 5
-                0.5f, 0.0f, // 6
-                0.5f, 0.5f, // 7
-                0.5f, 1.0f, // 8
-                0.75f, 1.0f, // 9
-                0.75f, 0.5f, // 10
-                0.75f, 0.0f // 11
-        );
+    public void loadUVMap() {
+        for (int i = 0; i < this.textures.UVMap.size(); i++) {
+            this.meshPoints.getTexCoords().addAll(textures.UVMap.get(i));
+        }
+        System.out.println(this.meshPoints.getTexCoords().get(0));
+        System.out.println(this.meshPoints.getTexCoords().get(1));
+        System.out.println(this.meshPoints.getTexCoords().get(2));
+        System.out.println(this.meshPoints.getTexCoords().get(3));
+        System.out.println(this.meshPoints.getTexCoords().get(4));
+        System.out.println(this.meshPoints.getTexCoords().get(5));
+        System.out.println(this.meshPoints.getTexCoords().get(6));
+        System.out.println(this.meshPoints.getTexCoords().get(7));
     }
 
     public void removeBlock(int x, int y, int z) {
@@ -62,7 +61,7 @@ public class Chunk {
                 for (int z = 0; z <= 15; z++) {
                     if (this.data[x][y][z] == 1) {
                         ArrayList<Boolean> neighbours = getNeighbours(x, y, z);
-                        Voxel voxel = new Voxel(x * 64, y * (-64), z * 64, 1);
+                        Voxel voxel = new Voxel(x * 64, y * (-64), z * 64, ThreadLocalRandom.current().nextInt(1, 4));
                         voxel.generateMeshData(neighbours, this.meshPoints.getPoints().size() / 3);
                         this.meshPoints.getPoints().addAll(voxel.points.getPoints());
                         this.meshPoints.getFaces().addAll(voxel.points.getFaces());
