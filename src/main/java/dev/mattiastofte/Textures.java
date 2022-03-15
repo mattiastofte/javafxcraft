@@ -19,13 +19,13 @@ public class Textures {
     }
 
     public void generateUVMap() {
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 16; j++) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 UVMap.addAll(Arrays.asList(
-                        0.0625f * j, 0.0626f * i,
-                        0.0625f * j, 0.0626f * (i + 1),
-                        0.0625f * (j + 1), 0.0626f * (i + 1),
-                        0.0625f * (j + 1), 0.0626f * i));
+                        0.125f * j, 0.125f * i,
+                        0.125f * j, 0.125f * (i + 1),
+                        0.125f * (j + 1), 0.125f * (i + 1),
+                        0.125f * (j + 1), 0.125f * i));
             }
         }
     }

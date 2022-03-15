@@ -30,14 +30,6 @@ public class Chunk {
         for (int i = 0; i < this.textures.UVMap.size(); i++) {
             this.meshPoints.getTexCoords().addAll(textures.UVMap.get(i));
         }
-        System.out.println(this.meshPoints.getTexCoords().get(0));
-        System.out.println(this.meshPoints.getTexCoords().get(1));
-        System.out.println(this.meshPoints.getTexCoords().get(2));
-        System.out.println(this.meshPoints.getTexCoords().get(3));
-        System.out.println(this.meshPoints.getTexCoords().get(4));
-        System.out.println(this.meshPoints.getTexCoords().get(5));
-        System.out.println(this.meshPoints.getTexCoords().get(6));
-        System.out.println(this.meshPoints.getTexCoords().get(7));
     }
 
     public void removeBlock(int x, int y, int z) {
@@ -59,9 +51,9 @@ public class Chunk {
         for (int x = 0; x <= 15; x++) {
             for (int y = 0; y <= 63; y++) {
                 for (int z = 0; z <= 15; z++) {
-                    if (this.data[x][y][z] == 1) {
+                    if (this.data[x][y][z] != 0) {
                         ArrayList<Boolean> neighbours = getNeighbours(x, y, z);
-                        Voxel voxel = new Voxel(x * 64, y * (-64), z * 64, ThreadLocalRandom.current().nextInt(1, 4));
+                        Voxel voxel = new Voxel(x * 64, y * (-64), z * 64, this.data[x][y][z]);
                         voxel.generateMeshData(neighbours, this.meshPoints.getPoints().size() / 3);
                         this.meshPoints.getPoints().addAll(voxel.points.getPoints());
                         this.meshPoints.getFaces().addAll(voxel.points.getFaces());
@@ -98,7 +90,7 @@ public class Chunk {
         ArrayList<Boolean> neighbours = new ArrayList<>(Arrays.asList(false, false, false, false, false, false));
         for (int i = 0; i < 6; i++) {
             try {
-                if (this.data[x + deltas.get(3 * i)][y + deltas.get((3 * i) + 1)][z + deltas.get((3 * i) + 2)] == 1) {
+                if (this.data[x + deltas.get(3 * i)][y + deltas.get((3 * i) + 1)][z + deltas.get((3 * i) + 2)] != 0) {
                     neighbours.set(i, true);
                 }
             } catch (Exception e) {

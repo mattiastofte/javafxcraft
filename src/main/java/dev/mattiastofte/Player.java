@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
@@ -27,19 +28,21 @@ public class Player {
     Box axisY;
     Box axisZ;
     PhongMaterial headTexture;
+    Point3D position;
 
     // CONSTRUCTOR
 
     public Player() {
         this.velocity = new ArrayList<>(Arrays.asList(0.0, 0.0, 0.0));
         this.testBody = new Box(30, 30, 30);
+        this.position = new Point3D(0, 0, 0);
 
         this.localAxis = new XGroup();
         this.content = new XGroup();
 
         // SET UP CAMERA
         this.camera = new PerspectiveCamera();
-        this.camera.setFieldOfView(80.0);
+        this.camera.setFieldOfView(75.0);
         this.camera.setTranslateX(-700.0);
         this.camera.setTranslateY(-400.0);
         this.camera.setTranslateZ(460.0);
@@ -109,4 +112,16 @@ public class Player {
             updatePos();
         };
     };
+
+    public Double getX() {
+        return this.localAxis.getLocalToSceneTransform().getTx();
+    }
+
+    public Double getY() {
+        return this.localAxis.getLocalToSceneTransform().getTy();
+    }
+
+    public Double getZ() {
+        return this.localAxis.getLocalToSceneTransform().getTz();
+    }
 }

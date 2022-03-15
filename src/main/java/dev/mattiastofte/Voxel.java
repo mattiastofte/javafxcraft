@@ -31,10 +31,10 @@ public class Voxel {
         // GENERATE NORTH FACE
         if (!neighbours.get(0)) {
             this.points.getPoints().addAll(
-                    0, 0, 64,
-                    0, -64, 64,
-                    64, -64, 64,
-                    64, 0, 64);
+                    0.0f, 0.0f, 64.0f,
+                    0.0f, -64.0f, 64.0f,
+                    64.0f, -64.0f, 64.0f,
+                    64.0f, 0.0f, 64.0f);
             this.points.getFaces().addAll(
                     i, 0 + (4 * j), i + 1, 2 + (4 * j), i + 2, 2 + (4 * j), // FIRST VERTEX
                     i, 0 + (4 * j), i + 2, 2 + (4 * j), i + 3, 3 + (4 * j)// SECOND VERTEX
@@ -45,10 +45,10 @@ public class Voxel {
         // GENERATE SOUTH FACE
         if (!neighbours.get(2)) {
             this.points.getPoints().addAll(
-                    64, 0, 0,
-                    64, 0, 64,
-                    64, -64, 64,
-                    64, -64, 0);
+                    64.0f, 0.0f, 0.0f,
+                    64.0f, 0.0f, 64.0f,
+                    64.0f, -64.0f, 64.0f,
+                    64.0f, -64.0f, 0.0f);
             this.points.getFaces().addAll(
                     i, 0 + (4 * j), i + 1, 1 + (4 * j), i + 2, 2 + (4 * j), // FIRST VERTEX
                     i, 0 + (4 * j), i + 2, 2 + (4 * j), i + 3, 3 + (4 * j)// SECOND VERTEX
@@ -73,10 +73,10 @@ public class Voxel {
         // GENERATE WEST FACE
         if (!neighbours.get(3)) {
             this.points.getPoints().addAll(
-                    0, 0, 0,
-                    0, -64, 0,
-                    0, -64, 64,
-                    0, 0, 64);
+                    0.0f, 0.0f, 0.0f,
+                    0.0f, -64.0f, 0.0f,
+                    0.0f, -64.0f, 64.0f,
+                    0.0f, 0.0f, 64.0f);
             this.points.getFaces().addAll(
                     i, 0 + (4 * j), i + 1, 1 + (4 * j), i + 2, 2 + (4 * j), // FIRST VERTEX
                     i, 0 + (4 * j), i + 2, 2 + (4 * j), i + 3, 3 + (4 * j) // SECOND VERTEX
@@ -87,10 +87,10 @@ public class Voxel {
         // GENERATE UP FACE
         if (!neighbours.get(4)) {
             this.points.getPoints().addAll(
-                    0, -64, 0,
-                    64, -64, 0,
-                    64, -64, 64,
-                    0, -64, 64);
+                    0.0f, -64.0f, 0.0f,
+                    64.0f, -64.0f, 0.0f,
+                    64.0f, -64.0f, 64.0f,
+                    0.0f, -64.0f, 64.0f);
             this.points.getFaces().addAll(
                     i, 0 + (4 * j), i + 1, 1 + (4 * j), i + 2, 2 + (4 * j), // FIRST VERTEX
                     i, 0 + (4 * j), i + 2, 2 + (4 * j), i + 3, 3 + (4 * j)// SECOND VERTEX
@@ -101,10 +101,10 @@ public class Voxel {
         // GENERATE DOWN FACE
         if (!neighbours.get(5)) {
             this.points.getPoints().addAll(
-                    64, 0, 64,
-                    64, 0, 0,
-                    0, 0, 0,
-                    0, 0, 64);
+                    64.0f, 0.0f, 64.0f,
+                    64.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 64.0f);
             this.points.getFaces().addAll(
                     i, 0 + (4 * j), i + 1, 1 + (4 * j), i + 2, 2 + (4 * j), // FIRST VERTEX
                     i, 0 + (4 * j), i + 2, 2 + (4 * j), i + 3, 3 + (4 * j) // SECOND VERTEX

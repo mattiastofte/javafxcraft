@@ -85,13 +85,6 @@ public class Main extends Application {
         // GENERATOR
         Generator generator = new Generator();
 
-        // GENERATE CHUNKS
-        for (int m = 0; m < 20; m++) {
-            for (int n = 0; n < 20; n++) {
-                generator.getChunk(m, n);
-            }
-        }
-
         // CONTROLS
         Robot robot = new Robot();
         robot.mouseMove(screenWidth / 2, screenHeight / 2);
@@ -112,22 +105,22 @@ public class Main extends Application {
 
             // HANDLE PLAYER MOVEMENT INPUT (for pressed keys)
             if (key.getCode() == KeyCode.W) {
-                player.setVelocityZ(8.0);
+                player.setVelocityZ(12.0);
             }
             if (key.getCode() == KeyCode.S) {
-                player.setVelocityZ(-8.0);
+                player.setVelocityZ(-12.0);
             }
             if (key.getCode() == KeyCode.A) {
-                player.setVelocityX(-8.0);
+                player.setVelocityX(-12.0);
             }
             if (key.getCode() == KeyCode.D) {
-                player.setVelocityX(8.0);
+                player.setVelocityX(12.0);
             }
             if (key.getCode() == KeyCode.SPACE) {
-                player.setVelocityY(-8.0);
+                player.setVelocityY(-12.0);
             }
             if (key.getCode() == KeyCode.SHIFT) {
-                player.setVelocityY(8.0);
+                player.setVelocityY(12.0);
             }
         });
 
@@ -171,7 +164,6 @@ public class Main extends Application {
                     oldY = robot.getMouseY();
                     newX = robot.getMouseX();
                     newY = robot.getMouseY();
-                    System.out.println(generator.chunkGroup.getChildren());
                 } else {
                     deltaMouseX = newX - oldX;
                     deltaMouseY = newY - oldY;
@@ -180,13 +172,38 @@ public class Main extends Application {
                     player.rotatePitch(-deltaMouseY * mouseSensitivity);
                     player.rotateYaw(deltaMouseX * mouseSensitivity);
                 }
+            };
+        };
+        final AnimationTimer chunkLoader = new AnimationTimer() {
+            int player_m = 10;
+            int player_n = 10;
+            int radius = 8;
+            ArrayList<String> loadedChunksIndex;
+            private long lastUpdate = 0;
 
+            @Override
+            public void handle(long now) { // GENERATE CHUNKS IN RADIUS AROUND PLAYER
+                // DENNE FUNKER
+                if (now - lastUpdate >= 28_000_000) {
+                    if (player_m != player.getX().intValue() / 1024 || player_n != player.getZ().intValue() / 1024) {
+                        player_m = player.getX().intValue() / 1024;
+                        player_n = player.getZ().intValue() / 1024;
+                        for (int m = 0; m < radius; m++) {
+                            for (int n = 0; n < radius; n++) {
+                                generator.getChunk(player_m + m - (radius / 2), player_n + n - (radius / 2));
+                            }
+                        }
+                        generator.unloadChunks(player_m, player_n, radius);
+                    }
+                    lastUpdate = now;
+                }
             };
         };
 
         // START ANIMATION TIMERS
         player.handleMovement.start();
         handleMouse.start();
+        chunkLoader.start();
 
         // STAGE PROPERTIES
         stage.setTitle(String.format("%s - %s", title, version));
